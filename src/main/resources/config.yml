@@ -1,0 +1,45 @@
+# RPGInventory 配置文件
+
+# 數據庫設置
+database:
+  # 數據庫類型：sqlite 或 mysql
+  type: sqlite
+  
+  # MySQL 設置（僅在 type 為 mysql 時使用）
+  mysql:
+    host: localhost
+    port: 3306
+    database: rpginventory
+    username: root
+    password: password
+    
+  # 自動保存間隔（秒）
+  auto-save: 300
+
+# 允許放入圖騰欄的 ExecutableItems ID 清單
+allowed-totems:
+  - auu5.5
+  - auu5.4
+  - auu5.3
+  - auu5.2
+  - auu5.1
+  - auu4.6
+  - auu4.4
+  - auu4.3
+  - auu4.2
+  - auu4.1
+  - auu3.7
+  - auu3.6
+  - auu3.4
+  - auu3.3
+  - auu3.2
+  - auu2.7
+  - auu2.6
+  - auu2.4
+  - auu2.3
+  - auu2.2
+  - auu1.5
+  - auu1.4
+  - auu1.3
+  - auu1.2
+  - auu1.1

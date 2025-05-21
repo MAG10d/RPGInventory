@@ -2,3 +2,17 @@ name: RPGInventory
 version: '1.0'
 main: org.MAGd.rPGInventory.RPGInventory
 api-version: '1.21'
+softdepend: [ExecutableItems, SCore]
+commands:
+  rpginv:
+    description: RPGInventory 主命令
+    usage: /rpginv <open|help|debug>
+    aliases: [rpgi]
+    permission: rpginventory.use
+permissions:
+  rpginventory.use:
+    description: 允許使用基本命令
+    default: true
+  rpginventory.admin:
+    description: 允許使用管理員命令
+    default: op
