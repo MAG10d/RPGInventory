@@ -1,0 +1,4 @@
+name: RPGInventory
+version: '1.0'
+main: org.MAGd.rPGInventory.RPGInventory
+api-version: '1.21'
