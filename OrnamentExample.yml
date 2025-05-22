@@ -1,0 +1,106 @@
+# 名称或显示名称
+name: '&#50FB00㊍ &#52F633飾&#55F166品&#57EC99範&#5AE7CC例 &#5CE2FF㊍'
+# 物品发光效果
+glow: true
+# 禁用附魔导致的滑翔效果
+disableEnchantGlide: false
+# 物品的描述信息
+lore:
+- §6[RPGInventory飾品]
+- §7裝備到飾品欄位後提供特殊效果
+- §7右鍵點擊可觸發特殊能力
+# 物品材质
+material: EMERALD
+# 禁止此物品进行堆叠
+# 强制单个物品独立存在
+disableStack: true
+# 玩家死亡时不掉落此物品
+keepItemOnDeath: true
+# 仅拥有此物品的玩家可使用
+canBeUsedOnlyByTheOwner: false
+# 若使用者非此物品拥有者则取消事件
+cancelEventIfNotOwner: false
+# 存储物品的额外信息
+storeItemInfo: false
+# 开启此选项使物品永不损坏
+unbreakable: true
+# 若玩家无权限则取消事件
+cancelEventIfNoPermission: false
+# 该特性适用的世界列表
+whitelistedWorlds: []
+# 使用次数特性
+usageFeatures:
+  # 物品的可使用次数 (-1 = 无限)
+  usage: -1
+  # 是否可刷新清除
+  isRefreshableClean: true
+  # 物品使用上限
+  usageLimit: -1
+# 隐藏部分物品信息
+hiders:
+  # 隐藏物品附魔信息
+  hideEnchantments: false
+  # 隐藏"不可破坏"标签
+  hideUnbreakable: true
+  # 隐藏物品属性
+  hideAttributes: false
+  # 隐藏使用信息
+  hideUsage: true
+# 触发器定义
+activators:
+  # 循环触发器 - 每10秒自动触发一次效果
+  activator0:
+    name: '&e循環效果'
+    option: LOOP
+    usageModification: 0
+    cancelEvent: false
+    noActivatorRunIfTheEventIsCancelled: false
+    autoUpdateItem: false
+    cooldownFeatures:
+      cooldown: 0
+    globalCooldownFeatures:
+      cooldown: 0
+    # 激活器生效的槽位
+    detailedSlots:
+    - 4  # RPGInventory飾品欄位置
+    # 执行命令列表
+    commands:
+    - REGAIN HEALTH 1
+    # 每10秒触发一次
+    delay: 10
+    delayInTick: false
+  
+  # 右键点击触发器
+  activator1:
+    name: '&e右鍵效果'
+    option: RIGHT_CLICK
+    usageModification: 0
+    cancelEvent: true
+    noActivatorRunIfTheEventIsCancelled: false
+    autoUpdateItem: false
+    cooldownFeatures:
+      cooldown: 30
+      displayCooldownMessage: true
+    globalCooldownFeatures:
+      cooldown: 0
+    commands:
+    - SPEED 1 200
+    - JUMP 1 200
+    - CONSOLE_COMMAND particle minecraft:flame %player_location% 0.5 0.5 0.5 0.1 30 force
+    
+  # 受到伤害时触发器
+  activator2:
+    name: '&e受傷效果'
+    option: PLAYER_DAMAGED
+    usageModification: 0
+    cancelEvent: false
+    noActivatorRunIfTheEventIsCancelled: false
+    autoUpdateItem: false
+    cooldownFeatures:
+      cooldown: 60
+    globalCooldownFeatures:
+      cooldown: 0
+    commands:
+    - DAMAGE_RESISTANCE 1 100
+    - REGAIN HEALTH 2
+    - CONSOLE_COMMAND particle minecraft:heart %player_location% 0.5 1 0.5 0.1 10 force 

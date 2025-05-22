@@ -117,3 +117,29 @@ runs/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+TOTEM/auu1.1.yml
+TOTEM/auu1.2.yml
+TOTEM/auu1.3.yml
+TOTEM/auu1.4.yml
+TOTEM/auu1.5.yml
+TOTEM/auu2.2.yml
+TOTEM/auu2.3.yml
+TOTEM/auu2.4.yml
+TOTEM/auu2.6.yml
+TOTEM/auu2.7.yml
+TOTEM/auu3.2.yml
+TOTEM/auu3.3.yml
+TOTEM/auu3.4.yml
+TOTEM/auu3.6.yml
+TOTEM/auu3.7.yml
+TOTEM/auu4.1.yml
+TOTEM/auu4.2.yml
+TOTEM/auu4.3.yml
+TOTEM/auu4.4.yml
+TOTEM/auu4.6.yml
+TOTEM/auu5.1.yml
+TOTEM/auu5.2.yml
+TOTEM/auu5.3.yml
+TOTEM/auu5.4.yml
+TOTEM/auu5.5.yml
+.cursor/rules/main.mdc

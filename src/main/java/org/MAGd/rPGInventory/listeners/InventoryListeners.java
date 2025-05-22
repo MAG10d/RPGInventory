@@ -1,6 +1,7 @@
 package org.MAGd.rPGInventory.listeners;
 
 import org.MAGd.rPGInventory.RPGInventory;
+// import org.MAGd.rPGInventory.data.PlayerData; // 移除未使用的導入
 import org.MAGd.rPGInventory.gui.InventoryGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -64,7 +65,7 @@ public class InventoryListeners implements Listener {
             int slot = event.getRawSlot(); // rawSlot 是相對於頂部背包的
             ItemStack cursor = event.getCursor();
             ItemStack currentItem = event.getCurrentItem();
-            boolean isPlaceholder = isPlaceholderItem(currentItem);
+            boolean isPlaceholder = InventoryGUI.isPlaceholderItem(currentItem);
 
             // 防止點擊邊框 (slot < 0 已經由 topInventory.equals(clickedInventory) 隱含排除)
             // 邊框是 0-8, 45-53, 以及每行的0和8
@@ -197,6 +198,26 @@ public class InventoryListeners implements Listener {
     }
 
     private void handleTotemSlotClick(InventoryClickEvent event, Player player, int slot, ItemStack cursor, ItemStack currentItem, boolean isPlaceholderCurrent) {
+        // 新增：如果當前槽位中的物品是佔位符，進行嚴格保護
+        if (isPlaceholderCurrent) {
+            // 允許的操作：鼠標上有物品 (cursor != null 且非 AIR)，並且不是 Shift-Click (MOVE_TO_OTHER_INVENTORY) 將佔位符移出。
+            // 換句話說，如果鼠標為空，或鼠標有物品但嘗試 Shift-Click 移出佔位符，都應取消。
+            boolean tryingToPlaceWithCursor = (cursor != null && cursor.getType() != Material.AIR);
+            
+            if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) { // Shift-clicking the placeholder itself
+                event.setCancelled(true);
+                // player.sendMessage("§c[DEBUG] §e無法 Shift+Click 取出固定槽位的佔位符。"); // 可選調試信息
+                return;
+            }
+            
+            if (!tryingToPlaceWithCursor) { // 空手點擊或任何非放置的交互
+                event.setCancelled(true);
+                // player.sendMessage("§c[DEBUG] §e此為固定槽位，點擊佔位符無效。"); // 可選調試信息
+                return;
+            }
+            // 如果鼠標上有物品，並且不是Shift-Click佔位符本身，則允許繼續執行下面的放置邏輯 (會替換佔位符)
+        }
+
         // 放置物品邏輯
         if (cursor != null && cursor.getType() != Material.AIR) {
             if (plugin.hasExecutableItems()) {
@@ -267,8 +288,10 @@ public class InventoryListeners implements Listener {
         } 
         // 取出物品邏輯
         else if (cursor == null || cursor.getType() == Material.AIR) {
+            // 由於上面的新邏輯，如果 isPlaceholderCurrent 為 true，基本不會執行到這裡的取出邏輯了
+            // 但保留原有 !isPlaceholderCurrent 檢查以防萬一
             if (currentItem != null && !isPlaceholderCurrent) {
-                // 允許默認取出，但之後要放回占位符並保存
+                // 允許默認的取出，但之後要放回占位符並保存
                 new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -280,40 +303,15 @@ public class InventoryListeners implements Listener {
                         plugin.getTotemEffectListener().updateTotemLoopTasks(player);
                     }
                 }.runTaskLater(plugin, 1L);
-            } else if (isPlaceholderCurrent) {
-                 event.setCancelled(true); // 防止與占位符進行不期望的交互
-            }
+            } 
+            // 這個 else if 分支理論上因為頂部的 isPlaceholderCurrent 檢查而不再需要，
+            // 但保留它不會造成傷害，只是變得冗余。
+            // else if (isPlaceholderCurrent) { 
+            //    event.setCancelled(true); 
+            // }
         }
     }
 
-    /**
-     * 檢查物品是否為占位符物品
-     * @param item 要檢查的物品
-     * @return 是否為占位符物品
-     */
-    private boolean isPlaceholderItem(ItemStack item) {
-        if (item == null || item.getType() == Material.AIR) return false;
-        
-        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-            String name = item.getItemMeta().getDisplayName();
-            // 檢查飾品欄佔位符
-            if (name.equals("§d飾品欄") && item.getType() == Material.NETHER_STAR) {
-                return true;
-            }
-            // 檢查圖騰欄佔位符
-            if (name.startsWith("§e圖騰欄 - ") && item.getType() == Material.TOTEM_OF_UNDYING) {
-                return true;
-            }
-            // 新增：檢查紙張佔位符 (用於填充空白格)
-            if (item.getType() == Material.PAPER && name.equals("§7")) {
-                return true;
-            }
-            return false; 
-        }
-        
-        return false;
-    }
-    
     /**
      * 獲取 ExecutableItems 物品的 ID
      * @param item 物品
@@ -358,7 +356,7 @@ public class InventoryListeners implements Listener {
         int ornamentSlot = InventoryGUI.getOrnamentSlot();
         if (ornamentSlot != slotToIgnoreIfReplacing) { 
             ItemStack itemInOrnamentSlot = rpgInventory.getItem(ornamentSlot);
-            if (itemInOrnamentSlot != null && !isPlaceholderItem(itemInOrnamentSlot)) { 
+            if (itemInOrnamentSlot != null && !InventoryGUI.isPlaceholderItem(itemInOrnamentSlot)) { 
                 if (newItemId.equals(getItemId(itemInOrnamentSlot))) {
                     return true; 
                 }
@@ -369,7 +367,7 @@ public class InventoryListeners implements Listener {
         for (int totemSlotInGUI : InventoryGUI.getTotemSlots()) {
             if (totemSlotInGUI != slotToIgnoreIfReplacing) { 
                 ItemStack itemInTotemSlot = rpgInventory.getItem(totemSlotInGUI);
-                if (itemInTotemSlot != null && !isPlaceholderItem(itemInTotemSlot)) {
+                if (itemInTotemSlot != null && !InventoryGUI.isPlaceholderItem(itemInTotemSlot)) {
                     if (newItemId.equals(getItemId(itemInTotemSlot))) {
                         return true; 
                     }

@@ -2,17 +2,37 @@ name: RPGInventory
 version: '1.0'
 main: org.MAGd.rPGInventory.RPGInventory
 api-version: '1.21'
-softdepend: [ExecutableItems, SCore]
+authors: [ MagD ]
+description: RPGInventory plugin
+
+depend: # 添加對Oraxen和其他必要插件的硬依賴
+  - Oraxen
+  - ExecutableItems
+  - Vault
+  - ProtocolLib
+  - PlaceholderAPI
+  - SCore # SCore 似乎也是 ExecutableItems 的一個依賴，並且在日誌中出現
+
 commands:
   rpginv:
-    description: RPGInventory 主命令
-    usage: /rpginv <open|help|debug>
-    aliases: [rpgi]
-    permission: rpginventory.use
+    description: Opens the RPG Inventory.
+    usage: /rpginv <open|reload|clear>
+    aliases: [rpginventory]
+  mana:
+    description: Manages player mana.
+    usage: /mana <add|set|remove|check> <player> [amount]
+    permission: rpginventory.mana.admin
+
 permissions:
   rpginventory.use:
-    description: 允許使用基本命令
+    description: Allows usage of /rpginv open.
     default: true
-  rpginventory.admin:
-    description: 允許使用管理員命令
+  rpginventory.reload:
+    description: Allows usage of /rpginv reload.
+    default: op
+  rpginventory.clear:
+    description: Allows usage of /rpginv clear.
+    default: op
+  rpginventory.mana.admin:
+    description: Allows administration of player mana.
     default: op

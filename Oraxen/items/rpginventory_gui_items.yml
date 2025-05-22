@@ -1,0 +1,80 @@
+rpginv_border:
+  itemname: '<white> '
+  material: GRAY_STAINED_GLASS_PANE
+  Pack:
+    generate_model: true
+    parent_model: item/generated
+    textures:
+    - required/particle
+
+rpginv_blank_filler:
+  itemname: '<white> '
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: item/generated
+    textures:
+    - required/particle
+
+rpginv_ornament_placeholder:
+  itemname: '<white> ' # 或者 "<gold>飾品欄" 如果您希望它有名字但使用透明紋理
+  material: NETHER_STAR
+  Pack:
+    generate_model: true
+    textures:
+    - required/particle
+
+# --- 圖騰佔位符 ---
+rpginv_totem_placeholder_auu1:
+  itemname: <#FFD700>橫掃圖騰槽
+  material: TOTEM_OF_UNDYING
+  Pack:
+    generate_model: true
+    parent_model: item/generated
+    textures:
+    - rpginventory/gui/totems/auu1
+
+rpginv_totem_placeholder_auu2:
+  itemname: <#ADD8E6>防禦圖騰槽
+  material: TOTEM_OF_UNDYING
+  Pack:
+    generate_model: true
+    parent_model: item/generated
+    textures:
+    - rpginventory/gui/totems/auu2
+
+rpginv_totem_placeholder_auu3:
+  itemname: <#FF6347>攻擊圖騰槽
+  material: TOTEM_OF_UNDYING
+  Pack:
+    generate_model: true
+    parent_model: item/generated
+    textures:
+    - rpginventory/gui/totems/auu3
+
+rpginv_totem_placeholder_auu4:
+  itemname: <#90EE90>回復圖騰槽
+  material: TOTEM_OF_UNDYING
+  Pack:
+    generate_model: true
+    parent_model: item/generated
+    textures:
+    - rpginventory/gui/totems/auu4
+
+rpginv_totem_placeholder_auu5:
+  itemname: <#DDA0DD>魔法圖騰槽
+  material: TOTEM_OF_UNDYING
+  Pack:
+    generate_model: true
+    parent_model: item/generated
+    textures:
+    - rpginventory/gui/totems/auu5
+
+rpginv_default_totem_placeholder:
+  itemname: <gray>圖騰槽
+  material: TOTEM_OF_UNDYING
+  Pack:
+    generate_model: true
+    parent_model: item/generated
+    textures:
+    - required/particle

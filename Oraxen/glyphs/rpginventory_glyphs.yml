@@ -1,0 +1,4 @@
+rpginventory_gui_background:
+  texture: gui/rpginventory_background # 請確保 Oraxen/pack/textures/gui/rpginventory_background.png 存在
+  ascent: 13 # 從10向上移動7單位 (10-7=3)
+  height: 256 # 假設主要GUI部分的高度為166像素，標準Minecraft GUI是176x166 
