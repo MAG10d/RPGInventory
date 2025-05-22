@@ -80,7 +80,8 @@ public class InventoryListeners implements Listener {
                                  event.getAction() == InventoryAction.PICKUP_ONE || 
                                  event.getAction() == InventoryAction.PICKUP_SOME || 
                                  event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || // Shift-click out of placeholder
-                                 event.getAction() == InventoryAction.COLLECT_TO_CURSOR)) {
+                                 event.getAction() == InventoryAction.COLLECT_TO_CURSOR ||
+                                 event.getAction() == InventoryAction.SWAP_WITH_CURSOR)) {
                 event.setCancelled(true);
                 return;
             }

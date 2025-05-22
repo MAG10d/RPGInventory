@@ -44,6 +44,8 @@ public class InventoryGUI {
     private static final String ORAXEN_TOTEM_SLOT_BASE_ID = "rpginv_totem_placeholder_"; // e.g., rpginv_totem_placeholder_auu1
     private static final String ORAXEN_DEFAULT_TOTEM_SLOT_ID = "rpginv_default_totem_placeholder";
 
+    private static final ItemStack DEFAULT_PANE_PLACEHOLDER = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("§7").build();
+
     private static RPGInventory pluginInstance; // 定義靜態實例變量
 
     static {
@@ -122,27 +124,37 @@ public class InventoryGUI {
     private static void setInventoryBorder(Inventory inventory) {
         ItemStack borderItem = getOraxenItem(ORAXEN_BORDER_ITEM_ID);
         if (borderItem == null) {
-            borderItem = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
-                .setName("§7")
-                .build();
+            // 如果 Oraxen 沒有定義，則使用預設的灰色玻璃片
+            borderItem = DEFAULT_PANE_PLACEHOLDER.clone();
         }
 
         ItemStack blankSlotFiller = getOraxenItem(ORAXEN_BLANK_SLOT_FILLER_ID);
         if (blankSlotFiller == null) {
-            blankSlotFiller = new ItemBuilder(Material.PAPER).setName("§7").build();
+            // 如果 Oraxen 沒有定義，則使用預設的灰色玻璃片
+            blankSlotFiller = DEFAULT_PANE_PLACEHOLDER.clone();
         }
         
         // 填充邊框和空白位置
         for (int i = 0; i < INVENTORY_SIZE; i++) {
-            boolean isBorder = (i < 9 || i >= INVENTORY_SIZE - 9 || i % 9 == 0 || i % 9 == 8);
-            boolean isSpecialSlot = isOrnamentSlot(i) || isTotemSlot(i);
+            boolean isBorderSlot = (i < 9 || i >= INVENTORY_SIZE - 9 || i % 9 == 0 || i % 9 == 8); // 判斷是否為傳統意義上的邊框槽位
+            boolean isSpecialItemSlot = isOrnamentSlot(i) || isTotemSlot(i); // 判斷是否為飾品或圖騰的實際放置槽位
 
-            if (isBorder) {
-                inventory.setItem(i, borderItem.clone());
-            } else if (!isSpecialSlot && inventory.getItem(i) == null) {
+            if (isBorderSlot) { // 這是外圍的邊框
+                if (!isSpecialItemSlot) { // 確保這個邊框槽本身不是一個特殊的物品放置槽
+                    inventory.setItem(i, borderItem.clone());
+                }
+                // 如果 isSpecialItemSlot 為 true，表示一個飾品或圖騰槽恰好在邊框位置，
+                // 它的佔位符會在 setupInventoryBase() 中被 ornamentPlaceholder 或 totemPlaceholder 正確設置，所以這裡不用管。
+            } else if (!isSpecialItemSlot) { // 這不是外圍邊框，也不是特殊物品槽，則是內部空白填充區域
                 // 只填充原本為空且非特殊用途的格子
-                inventory.setItem(i, blankSlotFiller.clone());
+                // 並且確保 getItem(i) 在調用前 inventory.getItem(i) 不是 null
+                // 以避免 ItemBuilder 在 clone 時對 null 操作 (雖然 clone() 應該能處理 null，但更安全)
+                 if (inventory.getItem(i) == null || inventory.getItem(i).getType() == Material.AIR) {
+                    inventory.setItem(i, blankSlotFiller.clone());
+                }
             }
+            // 如果 isSpecialItemSlot 為 true 且不是邊框槽，那麼它就是位於GUI中間的飾品或圖騰槽，
+            // 同樣，它的佔位符會在 setupInventoryBase() 中被正確設置。
         }
     }
     
